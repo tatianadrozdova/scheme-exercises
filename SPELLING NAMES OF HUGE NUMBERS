@@ -1,0 +1,145 @@
+                                             ;PROJECT: SPELLING NAMES OF HUGE NUMBERS 
+
+;Project description:
+;Write a procedure number-name that takes a positive integer argument and returns a sentence containing that number spelled out in words:
+;Example (number-name 5513345) result '(five million five hundred thirteen thousand three hundred fourty five)
+
+;1st step
+;Helper procedure that spells only two-digit numbers from 01 to 99
+
+; Example (spelling-of-two-digit-number 01) result 'one
+; Example (spelling-of-two-digit-number 35) result '(thirty five)
+; Example (spelling-of-two-digit-number 12) 'twelve
+
+(define spelling-of-two-digit-number
+  (lambda (number)
+  (cond 
+    
+    ((= number 00) '())
+    ((and (>= number 01) (<= number 09)) (spell-digit number))   ;Spell-digit program will treat two-digit argument with the first number 0(zero) as it is an 
+                                                                 ;one-digit argument. Number 01 is treated as number 1 result "one"
+    ((and (eq? (first number) 1) (eq? (bf number) 0)) 'ten)      ;Spell-digit program will treat two-digit argument with the first number >0
+    ((and (eq? (first number) 1) (eq? (bf number) 1)) 'eleven)   ;as a two-digit argument. Number 11 is treated as 11, result eleven
+    ((and (eq? (first number) 1) (eq? (bf number) 2)) 'twelve)
+    ((and (eq? (first number) 1) (eq? (bf number) 3)) 'thirteen)
+    ((and (eq? (first number) 1) (eq? (bf number) 4)) 'fourteen)
+    ((and (eq? (first number) 1) (eq? (bf number) 5)) 'fifteen)
+    ((and (eq? (first number) 1) (eq? (bf number) 6)) 'sixteen)
+    ((and (eq? (first number) 1) (eq? (bf number) 7)) 'seventeen)
+    ((and (eq? (first number) 1) (eq? (bf number) 8)) 'eighteen)
+    ((and (eq? (first number) 1) (eq? (bf number) 9)) 'nineteen)
+    ((= number 20) 'twenty)
+    ((= number 30) 'thirty)
+    ((= number 40) 'fourty)
+    ((= number 50) 'fifty)
+    ((= number 60) 'sixty)
+    ((= number 70) 'seventy)
+    ((= number 80) 'eighty)
+    ((= number 90) 'ninety)
+    ((eq? (first number) 2) (se 'twenty (spell-digit (bf number))))
+    ((eq? (first number) 3) (se 'thirty (spell-digit (bf number))))
+    ((eq? (first number) 4) (se 'fourty (spell-digit (bf number))))
+    ((eq? (first number) 5) (se 'fifty (spell-digit (bf number))))
+    ((eq? (first number) 6) (se 'sixty (spell-digit (bf number))))
+    ((eq? (first number) 7) (se 'seventy (spell-digit (bf number))))
+    ((eq? (first number) 8) (se 'eighty (spell-digit (bf number))))
+    (else 
+      (se 'ninety (spell-digit (bf number)))))))
+    
+                 
+    
+;2nd step      
+;Helper procedure that spells 1, 2 or 3-digit numbers from 0 to 999
+
+;Note: we use spelling-of-two-digit-number procedure for the three-digit-number argument in cond (2nd line) when: 
+;a) the first number of three-digit-number argument is 0 (zero).
+;b) the first 2 numbers of three-digit-number argument is 00;
+;c) the argument is a two-digit-number
+;c) the argument is a one digit number
+
+;When the argument is a three-digit-number with the first number as 0 (zero), the program spelling-of-two-digit-number  will treat this 
+;3-digit-number argument as a 2-digit-number argument.
+
+;Example (spelling-up-to-three-digit-number 2) result 'two
+;Example (spelling-up-to-three-digit-number 12) result 'twelve
+;Exampel (spelling-up-to-three-digit-number 234) result '(two hundred thirty four)
+
+(define spelling-up-to-three-digit-number
+  (lambda (number)
+    (cond
+      ((empty? number) '())
+      ((= number 000) '())
+      ((and (>= number 010)(<= number 099)) (spelling-of-two-digit-number (bf number)))
+      ((and (>= number 001)(<= number 009)) (spell-number (last number)))
+      (else 
+         (se (spell-digit (first number)) 'hundred (spelling-of-two-digit-number (bf number)))))))
+
+;3rd step
+;Helper procedure groups-of-three that groups a number into a sentence consisting of three digit numbers
+;Example (groups-of-three 4567890344) result '(4 567 890 344)
+
+(define groups-of-three
+  (lambda (number)
+    (cond
+      
+      ((= (count number) 1) (last number))
+      ((= (count number) 2) (word (last (bl number))(last number)))
+      ((= (count number) 3)(word (last (bl (bl number))) (last (bl number))(last number)))
+      (else (se (groups-of-three (bl (bl (bl number)))) (word (last (bl (bl number))) (last (bl number))(last number)))))))
+
+;4th step. Helper procedure that shows the largest name of the number
+;Example (names-of-large-numbers 36000000000) result 'billion
+
+  (define names-of-large-numbers
+  (lambda (number)
+    
+      (if (and (>= (count number) 4) (<= (count number) 6))
+          'thousand     
+        (if (and (>= (count number) 7) (<= (count number) 9))
+            'million      
+        (if (and (>= (count number) 10) (<= (count number) 12))
+            'billion
+        (if (and (>= (count number) 13) (<= (count number) 15)) 
+            'trillion
+        (if (and (>= (count number) 16) (<= (count number) 18))
+            'quadrillion
+        (if (and (>= (count number) 19) (<= (count number) 21))
+            'quintillion
+        (if (and (>= (count number) 22) (<= (count number) 24))
+            'sextillion
+        (if (and (>= (count number) 25) (<= (count number) 27))
+            'septillion
+        (if (and (>= (count number) 28) (<= (count number) 30))
+            'octillion
+        (if (and (>= (count number) 31) (<= (count number) 33))
+            'nonillion
+        (if (and (>= (count number) 34) (<= (count number) 36))
+            'decillion
+            '())))))))))))))
+
+
+;5th step. Main procedure number-name that takes a positive integer argument and returns a sentence containing that number spelled out in words
+;Example (number-name 5513345) result '(five million five hundred thirteen thousand three hundred fourty five)
+
+(define number-name
+  (lambda (number)
+    (cond
+      ((empty? number) '())
+      ((<= (count number) 3) (spelling-up-to-three-digit-number number))
+      
+      ((= (first (groups-of-three number)) 000) (number-name (bf number)))
+      
+      ((= (count (first (groups-of-three number))) 1) 
+       (se (spell-number (first (groups-of-three number))) 
+           (names-of-large-numbers number) (number-name (bf number))))
+      
+      ((= (count (first (groups-of-three number))) 2) 
+       (se (spelling-of-two-digit-number (first (groups-of-three number))) 
+           (names-of-large-numbers number)(number-name (bf (bf number)))))
+      
+      (else
+        (se (spelling-up-to-three-digit-number (first (groups-of-three number))) 
+            (names-of-large-numbers number) (number-name (bf (bf (bf number)))))))))
+
+                                              ;END OF PROJECT
+
