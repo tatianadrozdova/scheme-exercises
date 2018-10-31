@@ -1,4 +1,4 @@
-                                             ;PROJECT: SPELLING NAMES OF HUGE NUMBERS 
+                                             ;PROJECT: SPELLING NAMES OF HUGE NUMBERS - SCHEME PROGRAMMING LANGUAGE
 
 ;Project description:
 ;Write a procedure number-name that takes a positive integer argument and returns a sentence containing that number spelled out in words:
