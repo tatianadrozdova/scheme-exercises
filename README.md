@@ -28,3 +28,8 @@ Here are the various kinds of poker hands, in decreasing order of value:
  Example (poker-value '(s2 s3 s4 s6 s5)) result STRAIGHT FLUSH - SPADES
  Example (poker-value '(sa sq sj sk s10)) result ROYAL FLUSH - SPADES
  Example (poker-value '(sa h10 d2 sq ck)) result NONE OF THE ABOVE
+
+3. PROJECT: SPELLING NAMES OF HUGE NUMBERS
+  Project description:
+  Write a procedure number-name that takes a positive integer argument and returns a sentence containing that number spelled out in words:
+  Example (number-name 5513345) result '(five million five hundred thirteen thousand three hundred fourty five)
