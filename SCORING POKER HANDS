@@ -1,0 +1,503 @@
+                          ;PROJECT: SCORING POKER HANDS (programming language SCHEME/dialect of LISP)
+                          
+;There are different variations of cards and hands in POKER game. The poker player has 5 cards in his hands. 
+;The idea of this project is to invent a procedure poker-value that 
+; will tell the player what kind of poker hands the poker player has among his cards.
+
+; Here are the various kinds of poker hands, in decreasing order of value:
+
+- Royal-flush: ten, jack, queen, king, and ace, all of the same suit
+- Straight flush: five cards of sequential rank, all of the same suit
+- Four of a kind: four cards of the same rank
+- Full house: three cards of the same rank, and two of a second rank
+- Flush: five cards of the same suit, not sequential rank
+- Straight: five cards of sequential rank, not all of the same suit
+- Three of a kind: three cards of the same rank, no other matches
+- Two pair: two pairs of cards, of two different ranks
+- Pair: two cards of the same rank, no other matches
+- Nothing: none of the above
+
+
+;PART I. ROYAL-FLUSH when a hand consists of ten, jack, queen, king, and ace, all of the same suit
+;Example (roayl-flush? '(h10 hj hq hk ha)) result ROYAL FLUSH - HEARTS
+;Example (royal-flush? '(s10 sj sq sk sa)) result ROYAL FLUSH - SPADES
+;Example (royal-flush? '(c10 cj cq ck ca)) ROYAL FLUSH - CLUBS
+;Example (royal-flush? '(d10 dj dq dk da)) ROYAL FLUSH - DIAMONDS
+
+;Helper procedure all-cards-the-same-suit that checks if all cards in a hand are the same suit.
+;Example (all-cards-the-same-suit '(dj dk dq d10 d7)) result #t
+;Example (all-cards-the-same-suit '(dj sk dq d10 d7)) result #f
+
+(define all-cards-the-same-suit
+  (lambda (hand)
+    (cond
+      ((<= (count hand) 1) #t)
+      ((eq? (first (first hand)) (first (first (bf hand)))) (all-cards-the-same-suit (bf hand)))      
+      (else #f))))
+
+;Helper procedure from-jack-to-ace
+;Procedure to find out if all cards in a hand are ten, jack, queen, king, and ace.
+;Example (from-jack-to-ace '(dj sk dq d10 da)) result #t
+;Example (from-jack-to-ace '(dj sk dq d10 d9)) result #f
+
+(define from-jack-to-ace
+  (lambda (hand)
+    (if (and (member? 10 (every bf hand)) 
+             (member? 'j (every bf hand))
+             (member? 'q (every bf hand))
+             (member? 'k (every bf hand))
+             (member? 'a (every bf hand)))
+        #t
+        #f)))
+  
+
+;Procedure royal-flush? when a hand consists of ten, jack, queen, king, and ace, all of the same suit
+;Example (royal-flush? '(h10 hj hq hk ha)) result ROYAL FLUSH - HEARTS
+;Example (royal-flush? '(s10 sj sq sk sa)) result ROYAL FLUSH - SPADES
+;Example (royal-flush? '(c10 cj cq ck ca)) ROYAL FLUSH - CLUBS
+;Example (royal-flush? '(d10 dj dq dk da)) ROYAL FLUSH - DIAMONDS
+
+(define royal-flush?
+  (lambda (hand)
+    (if (and (from-jack-to-ace hand)
+            (all-cards-the-same-suit hand)
+            (eq? (first (first hand)) 'd))
+        (display "ROYAL FLUSH - DIAMONDS")
+        
+         (if (and (from-jack-to-ace hand)
+            (all-cards-the-same-suit hand)
+            (eq? (first (first hand)) 'h))
+             (display "ROYAL FLUSH - HEARTS")
+         
+         (if (and (from-jack-to-ace hand)
+            (all-cards-the-same-suit hand)
+            (eq? (first (first hand)) 'c))
+             (display "ROYAL FLUSH - CLUBS")
+         
+         (if (and (from-jack-to-ace hand)
+             (all-cards-the-same-suit hand)
+             (eq? (first (first hand)) 's))
+             (display "ROYAL FLUSH - SPADES")
+         #f))))))
+  
+;PART II. STRAIGHT FLUSH - Procedure that finds five cards of sequential rank, all of the same suit
+;Example (straight-flush? '(s9 sj s8 s7 s10)) result STRAIGHT FLUSH - SPADES
+;Example (straight-flush? '(h9 hk h10 hj hq)) result STRAIGHT FLUSH - HEARTS
+;Example (straight-flush? '(c9 ck c10 cj cq)) result STRAIGHT FLUSH - CLUBS
+;Example (straight-flush? '(d9 dj d8 d7 d10)) result STRAIGHT FLUSH - DIAMONDS
+
+;Helper procedure that shows if all cards in a hand are in a row
+;Example (five-cards-in-a-row '(dj sk dq d10 d9)) result '(1 2 3 4 5)
+
+(define five-cards-in-a-row
+  (lambda (hand)
+    (mergesort
+    (if (empty? hand)
+        '()
+   (se (count (member (bf (first hand)) '(a 2 3 4 5 6 7 8 9 10 j q k))) (five-cards-in-a-row (bf hand)))))))
+
+;Helper procedure five-cards-sequential-ranks that answer #t or #f if all cards are in a row
+;Example (five-cards-sequential-ranks (five-cards-in-a-row '(dj sk dq d10 d9))) result #t
+
+(define five-cards-sequential-ranks
+  (lambda (five-cards-in-a-row)
+    (cond
+      ((= (count five-cards-in-a-row) 1) #t)      
+      ((eq? (add1 (first five-cards-in-a-row)) (first (bf five-cards-in-a-row))) 
+      (five-cards-sequential-ranks (bf five-cards-in-a-row)))
+      (else         
+        #f))))
+
+;Main procedure straight-flush? that finds five cards of sequential rank, all of the same suit
+;Example (straight-flush? '(s9 sj s8 s7 s10)) result STRAIGHT FLUSH - SPADES
+;Example (straight-flush? '(h9 hk h10 hj hq)) result STRAIGHT FLUSH - HEARTS
+;Example (straight-flush? '(c9 ck c10 cj cq)) result STRAIGHT FLUSH - CLUBS
+;Example (straight-flush? '(d9 dj d8 d7 d10)) result STRAIGHT FLUSH - DIAMONDS
+
+(define straight-flush? 
+   (lambda (hand)
+    (if (and (five-cards-sequential-ranks (five-cards-in-a-row hand))
+            (all-cards-the-same-suit hand)
+            (eq? (first (first hand)) 'd))
+        (display "STRAIGHT FLUSH - DIAMONDS")
+        
+         (if (and (five-cards-sequential-ranks (five-cards-in-a-row hand))
+            (all-cards-the-same-suit hand)
+            (eq? (first (first hand)) 'h))
+             (display "STRAIGHT FLUSH - HEARTS")
+         
+         (if (and (five-cards-sequential-ranks (five-cards-in-a-row hand))
+            (all-cards-the-same-suit hand)
+            (eq? (first (first hand)) 'c))
+             (display "STRAIGHT FLUSH - CLUBS")
+         
+         (if (and (five-cards-sequential-ranks (five-cards-in-a-row hand))
+             (all-cards-the-same-suit hand)
+             (eq? (first (first hand)) 's))
+             (display "STRAIGHT FLUSH - SPADES")
+         #f))))))
+    
+ 
+;PART III. FOUR OF A KIND
+;Procedure that picks four cards of the same rank
+;Example (four-of-a-kind? '(dj hj hk cj sj)) result four-of-jacks
+;Example (poker-value '(dj hq dq cq sq)) result four-of-queens
+
+;Helper procedure four-of-one-kind? that checks if there are 4 cards of the same rank, and what rank it is.
+;Example (four-of-one-kind? '(dj hj hk cj sj)) result 'j
+
+(define four-of-one-kind?
+  (lambda (hand)
+    (cond   
+      ((empty? hand) #f)
+      ((< (appearances (bf (first hand))(every bf hand)) 4) (four-of-one-kind? (bf hand)))
+      (else (bf (first hand))))))
+
+;Main procedure four-of-a-kind? that displays the answer what kind of 4 cards are in a hand
+;Example (four-of-a-kind? '(dj hj hk cj sj)) result four-of-jacks
+
+(define four-of-a-kind?
+  (lambda (hand)
+    (if (eq? (four-of-one-kind? hand)'2)
+        (display "four-of-twos")
+        (if (eq? (four-of-one-kind? hand)'3)
+            (display "four-of-threes")
+            (if (eq? (four-of-one-kind? hand)'4)
+            (display "four-of-fours")
+            (if (eq? (four-of-one-kind? hand)'5)
+            (display "four-of-fives")
+            (if (eq? (four-of-one-kind? hand)'6)
+            (display "four-of-sixes")
+            (if (eq? (four-of-one-kind? hand)'7)
+            (display "four-of-sevens")
+            (if (eq? (four-of-one-kind? hand)'8)
+            (display "four-of-eights")
+            (if (eq? (four-of-one-kind? hand)'9)
+            (display "four-of-nines")
+            (if (eq? (four-of-one-kind? hand)'10)
+            (display "four-of-tens")
+            (if (eq? (four-of-one-kind? hand)'j)
+            (display "four-of-jacks")
+            (if (eq? (four-of-one-kind? hand)'q)
+            (display "four-of-queens")
+            (if (eq? (four-of-one-kind? hand)'k)
+            (display "four-of-kings")
+            (if (eq? (four-of-one-kind? hand)'a)
+            (display "four-of-aces")
+            #f)))))))))))))))
+         
+;PART IV. FULL HOUSE: three cards of the same rank, and two of a second rank
+;Example (full-house? '(dj sj hj s3 d3)) result FULL HOUSE: THREE OF JACKS AND PAIR OF JACKS
+
+;Helper procedure full-house-hand? that gives #t when a hand has 3 cards of one rank and 2 cards of another rank
+;Example (full-house-hand? '(dj sj hj s3 d3)) result #t
+;Example (full-house-hand? '(d2 sj hj s3 d3)) result #f
+
+(define full-house-hand?
+  (lambda (hand)
+   (if (and (member? 'two (compute-ranks hand))
+        (member? 'three (compute-ranks hand)))
+       #t
+       #f)))
+
+;Main procedure full-house?
+;Example (full-house? '(dj sj hj s3 d3)) result FULL HOUSE: THREE OF JACKS AND PAIR OF THREES
+;Example (full-house? '(s6  dj d7 sj hj )) result #f
+
+(define full-house?
+  (lambda (hand)
+   (if (full-house-hand? hand)
+        (and (display "FULL HOUSE: ")
+             (three-of-a-kind? hand)
+             (display " AND ")
+             (PAIR hand))
+    #f)))
+
+       
+    
+;PART V. Flush
+;Procedure flush that finds five cards of the same suit, not sequential rank
+;Example (flush? '(d3 d6 d8 dj da)) result FLUSH - DIAMONDS
+;Example (flush? '(s3 s6 s8 sj sa)) result ROYAL FLUSH - SPADES
+;Example (flush? '(h3 h6 h8 hj ha)) result FLUSH - HEARTS
+;Example (flush? '(c3 c6 c8 cj ca)) result FLUSH - CLUBS
+
+(define flush?
+  (lambda (hand)
+    (if (and (all-cards-the-same-suit hand)
+             (eq? (first (first hand)) 'd))
+        (display "FLUSH - DIAMONDS")
+        
+         (if (and (all-cards-the-same-suit hand)
+                  (eq? (first (first hand)) 'h))
+             (display "FLUSH - HEARTS")
+         
+         (if (and (all-cards-the-same-suit hand)
+                  (eq? (first (first hand)) 'c))
+             (display "FLUSH - CLUBS")
+         
+         (if (and (all-cards-the-same-suit hand)
+                  (eq? (first (first hand)) 's))
+             (display "ROYAL FLUSH - SPADES")
+         #f))))))
+
+;PART VI. STRAIGHT - 5 cards of sequential ranks, not all the same suit.
+;Example (straight? '(dj hq hk c9 s10)) result STRAIGHT
+
+(define straight? 
+   (lambda (hand)
+    (if (five-cards-sequential-ranks (five-cards-in-a-row hand))
+        (display "STRAIGHT")
+        #f)))
+
+;PART VII. THREE OF A KIND - THREE CARDS OF THE SAME RANK, NO OTHER MATCHES
+;Example (three-of-a-kind? '(dj sj hj d2 d3)) result THREE OF JACKS
+
+;Helper procedure three-occurences? that shows #t or #f if the hand has three cards of the same rank 
+;Example (three-occurences? '(d2 d3 dj sj hj )) result #t
+;Example (three-occurences? '(d2 d3 dj s5 hj)) result #f
+
+(define three-occurences?
+  (lambda (hand)
+    (cond
+    ((null? hand) #f)
+    ((= (occur (bf (first hand)) (every bf hand)) 3) #t)
+    (else
+        (three-occurences? (bf hand))))))
+
+;Main procedure three-of-a-kind? that displays what is the rank of the three cards with a similar rank
+;Example (three-of-a-kind? '(dj sj hj d2 d3)) result THREE OF JACKS
+
+(define three-of-a-kind?
+  (lambda (hand)
+    (cond
+      ((null? hand) #f)
+      ((= (occur 'a (every bf hand)) 3)
+      (display "THREE OF ACES"))
+      ((= (occur '2 (every bf hand)) 3)
+      (display "THREE OF TWOS"))
+      ((= (occur '3 (every bf hand)) 3)
+      (display "THREE OF THREES"))
+      ((= (occur '4 (every bf hand)) 3)
+      (display "THREE OF FOURS"))
+      ((= (occur '5 (every bf hand)) 3)
+      (display "THREE OF FIVES"))
+      ((= (occur '6 (every bf hand)) 3)
+      (display "THREE OF SIXES"))
+      ((= (occur '7 (every bf hand)) 3)
+      (display "THREE OF SEVENS"))
+      ((= (occur '8 (every bf hand)) 3)
+      (display "THREE OF EIGHTS"))
+      ((= (occur '9 (every bf hand)) 3)
+      (display "THREE OF NINES"))
+      ((= (occur '10 (every bf hand)) 3)
+      (display "THREE OF TENS"))
+      ((= (occur 'j (every bf hand)) 3)
+      (display "THREE OF JACKS"))
+      ((= (occur 'q (every bf hand)) 3)
+      (display "THREE OF QUEENS"))
+      ((= (occur 'k (every bf hand)) 3)
+      (display "THREE OF KINGS"))
+      (else
+        #f))))
+      
+    
+;PART VIII. TWO PAIR: two pairs of cards, of two different ranks
+; Example (two-pair? '(d3 d10 s8 d8 s10)) result  TWO PAIR OF CARDS: PAIR OF TENS AND PAIR OF EIGHTS
+; Example (two-pair? '(da dj sq dq sa)) result  TWO PAIR OF CARDS: PAIR OF ACES AND PAIR OF QUEENS
+
+;Helper procedure compute-ranks that shows how many and what ranks are the cards in a hand
+;Example (compute-ranks '(d3 s3 d4 s4 s5)) result '(two 3 two 4 one 5)
+;Example (compute-ranks '(dj sk sq hj dk)) '(two j one q two k)
+
+ (define compute-ranks
+   (lambda (hand)
+     (se (if (= (occur 'a (every bf hand)) 0)
+             '()
+            (se (spell-digit (occur 'a (every bf hand))) 'a))
+         (if (= (occur 2 (every bf hand)) 0)
+             '()
+             (se (spell-digit (occur 2 (every bf hand))) 2))
+         (if (= (occur 3 (every bf hand)) 0)
+             '()
+             (se (spell-digit (occur 3 (every bf hand))) 3))
+         (if (= (occur 4 (every bf hand)) 0)
+             '()
+             (se (spell-digit (occur 4 (every bf hand))) 4))
+         (if (= (occur 5 (every bf hand)) 0)
+             '()
+             (se (spell-digit (occur 5 (every bf hand))) 5))
+         (if (= (occur 6 (every bf hand)) 0)
+             '()
+             (se (spell-digit (occur 6 (every bf hand))) 6))
+         (if (= (occur 7 (every bf hand)) 0)
+             '()
+             (se (spell-digit (occur 7 (every bf hand))) 7))
+         (if (= (occur 8 (every bf hand)) 0)
+             '()
+             (se (spell-digit (occur 8 (every bf hand))) 8))
+         (if (= (occur 9 (every bf hand)) 0)
+             '()
+             (se (spell-digit (occur 9 (every bf hand))) 9))
+         (if (= (occur 10 (every bf hand)) 0)
+             '()
+             (se (spell-digit (occur 10 (every bf hand))) 10))
+         (if (= (occur 'j (every bf hand)) 0)
+             '()
+             (se (spell-digit (occur 'j (every bf hand))) 'j))
+         (if (= (occur 'q (every bf hand)) 0)
+             '()
+             (se (spell-digit (occur 'q (every bf hand))) 'q))
+         (if (= (occur 'k (every bf hand)) 0)
+             '()
+             (se (spell-digit (occur 'k (every bf hand))) 'k)))))
+      
+;Helper-procedure two-pair-in-hand? gives you #t if there are two pair of cards where each two of cards has the same rank
+;Example (two-pair-in-hand? '(dj sj h5 d2 d5)) result #t
+
+(define two-pair-in-hand?
+  (lambda (hand)
+    (if (= (occur 'two (compute-ranks hand)) 2)
+        #t
+        #f)))
+
+;Helper procedure that pick two pairs out of hand
+;Example (two-pairs (compute-ranks '(d3 s4 s3 d4 s5))) result '(two 3 two 4)
+
+(define two-pairs
+  (lambda (compute-ranks)
+    (cond
+      ((null? compute-ranks) '())
+      ((eq? (first compute-ranks) 'two) 
+       (cons (first compute-ranks) (cons (first (bf compute-ranks)) (two-pairs (bf (bf compute-ranks))))))
+      (else
+       (two-pairs (bf compute-ranks))))))
+
+;Helper-procedure that makes two lists where each list represents one pair
+;Example (lists-of-two-pairs '(dj sk sj dk sq)) result '((two j) (two k))
+
+(define lists-of-two-pairs
+  (lambda (hand)
+    (list (cons (first (two-pairs (compute-ranks hand))) (cons (first (bf (two-pairs (compute-ranks hand)))) '()))
+        (cons (first (bf (bf (two-pairs (compute-ranks hand))))) (cons (last (two-pairs (compute-ranks hand))) '())))))
+
+;Helper procedure to display what rank of the card are in a pair
+;Example (spell-pair '(two j)) result PAIR OF JAKES
+
+(define spell-pair
+  (lambda (pair)
+    (if (eq? (last pair) 'a) 
+        (display "PAIR OF ACES")
+        (if (eq? (last pair) 2) 
+            (display "PAIR OF TWOS")
+        (if (eq? (last pair) 3) 
+            (display "PAIR OF THREES")
+        (if (eq? (last pair) 4) 
+            (display "PAIR OF FOURS")
+        (if (eq? (last pair) 5) 
+            (display "PAIR OF FIVES")
+        (if (eq? (last pair) 6) 
+            (display "PAIR OF SIXES")
+        (if (eq? (last pair) 7) 
+            (display "PAIR OF SEVENS")
+        (if (eq? (last pair) 8) 
+            (display "PAIR OF EIGHTS")
+        (if (eq? (last pair) 9) 
+            (display "PAIR OF NINES")
+        (if (eq? (last pair) 10) 
+            (display "PAIR OF TENS")
+        (if (eq? (last pair) 'j) 
+            (display "PAIR OF JAKES")
+        (if (eq? (last pair) 'q) 
+            (display "PAIR OF QUEENS")
+        (if (eq? (last pair) 'k) 
+            (display "PAIR OF KINGS")
+            (display "NONE OF THE ABOVE"))))))))))))))))
+
+;Main procedure that shows two pairs of cards, of two different ranks
+;Example (two-pair? '(dj sk sq dk hq)) result TWO PAIR: PAIR OF QUEENS AND PAIR OF KINGS
+
+(define two-pair?
+  (lambda (hand)
+    (if (two-pair-in-hand? hand)
+        (and 
+         (display "TWO PAIR: ")
+         (spell-pair (first (lists-of-two-pairs hand)))
+         (display " AND ")
+         (spell-pair (last (lists-of-two-pairs hand))))
+        #f)))
+            
+         
+;PART IX. PAIR when a hand has two cards of the same rank
+;Example (PAIR '(dq s8 d10 h10 d9)) result "PAIR OF TENS"
+;Example (PAIR '(dq s8 d10 h4 d6)) result #f
+
+;Helper procedure that shows #t if a hand has two cards of the same rank and #f when it does not have it.
+;Example (two-occurences? '(dj sj h3 d2 d5)) result #t
+
+(define two-occurences?
+ (lambda (hand)
+    (cond
+    ((null? hand) #f)
+    ((= (occur (bf (first hand)) (every bf hand)) 2) #t)
+    (else
+        (two-occurences? (bf hand))))))
+
+;Main procedure that shows what pair of cards are in the hand
+;Example (PAIR '(dj sj h3 d2 d5)) result PAIR OF JACKS
+
+(define PAIR
+  (lambda (hand)
+    (cond
+      ((null? hand) #f)
+      ((= (occur 'a (every bf hand)) 2)
+      (display "PAIR OF ACES"))
+      ((= (occur '2 (every bf hand)) 2)
+      (display "PAIR OF TWOS"))
+      ((= (occur '3 (every bf hand)) 2)
+      (display "PAIR OF THREES"))
+      ((= (occur '4 (every bf hand)) 2)
+      (display "PAIR OF FOURS"))
+      ((= (occur '5 (every bf hand)) 2)
+      (display "PAIR OF FIVES"))
+      ((= (occur '6 (every bf hand)) 2)
+      (display "PAIR OF SIXES"))
+      ((= (occur '7 (every bf hand)) 2)
+      (display "PAIR OF SEVENS"))
+      ((= (occur '8 (every bf hand)) 2)
+      (display "PAIR OF EIGHTS"))
+      ((= (occur '9 (every bf hand)) 2)
+      (display "PAIR OF NINES"))
+      ((= (occur '10 (every bf hand)) 2)
+      (display "PAIR OF TENS"))
+      ((= (occur 'j (every bf hand)) 2)
+      (display "PAIR OF JACKS"))
+      ((= (occur 'q (every bf hand)) 2)
+      (display "PAIR OF QUEENS"))
+      ((= (occur 'k (every bf hand)) 2)
+      (display "PAIR OF KINGS"))
+      (else
+        #f))))
+
+
+;PART X: Full procedure "POKER-VALUE"
+;Example (poker-value '(s2 d3 s4 d2 h2)) result THREE OF TWOS
+;Example (poker-value '(s2 s3 s4 s6 s5)) result STRAIGHT FLUSH - SPADES
+;Example (poker-value '(sa sq sj sk s10)) result ROYAL FLUSH - SPADES
+;Example (poker-value '(sa h10 d2 sq ck)) result NONE OF THE ABOVE
+
+(define poker-value
+  (lambda (hand)
+    (or (royal-flush? hand)
+        (straight-flush? hand)
+        (four-of-a-kind? hand)
+        (full-house? hand)
+        (flush? hand)
+        (straight? hand)
+        (three-of-a-kind? hand)
+        (two-pair? hand)
+        (PAIR hand) 
+        (display "NONE OF THE ABOVE"))))
+
+                                  ;END OF POKER  PROJECT
+
