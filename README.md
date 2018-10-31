@@ -1,11 +1,11 @@
-Projects are written in SCHEME programming language that is a dialect of LISP.
+All PROJECTS ARE WRITTEN IN SCHEME PROGRAMMING LANGUAGE THAT IS A DIALECT OF LISP.
 
 DESCRIPTION OF PROJECTS:
 
 1. CONVERT ROMAN NUMERALS INTO ARABIC NUMERALS
    Example: Converstion of mcmlxxi into 1971
 
-2. PROJECT: SCORING POKER HANDS (programming language SCHEME/dialect of LISP)
+2. PROJECT: SCORING POKER HANDS
                           
 There are different variations of cards and hands in POKER game. The poker player has 5 cards in his hands. 
 The idea of this project is to invent a procedure poker-value that 
