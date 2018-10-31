@@ -2,8 +2,8 @@ Projects are written in SCHEME programming language that is a dialect of LISP.
 
 DESCRIPTION OF PROJECTS:
 
-1. CONVERT ARABIC NUMERALS INTO ROMAN NUMERALS (SCHEME)
- Example: (arabic 'mcmlxxi) result 1971
+1. CONVERT ROMAN NUMERALS INTO ARABIC NUMERALS
+   Example: Converstion of mcmlxxi into 1971
 
 2. PROJECT: SCORING POKER HANDS (programming language SCHEME/dialect of LISP)
                           
