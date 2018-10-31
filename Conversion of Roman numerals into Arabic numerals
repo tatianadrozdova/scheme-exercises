@@ -1,0 +1,31 @@
+;Procedure arabic which converts Roman numerals into Arabic numerals:
+;Example: (arabic 'mcmlxxi) result 1971
+
+
+;Helper procedure roman-into-arabic that convert one roman letter into one arabic letter
+;Example (roman-into-arabic 'x) result 10
+
+(define roman-into-arabic
+  (lambda (roman)
+    (if (empty? (bf roman))
+        (roman-value roman)
+        (se (roman-value (first roman)) (roman-into-arabic (bf roman))))))
+
+;Helper procedure arabic-transformation that transform every roman numbers into a list of arabic numbers
+;Example (arabic-transformation 'mcmlxxi) result '(1000 900 50 10 10 1)
+
+(define arabic-transformation
+  (lambda (roman)
+     (cond
+       ((empty? roman) '())
+       ((empty? (roman-into-arabic  roman)) '())
+        ((empty? (bf (roman-into-arabic  roman))) (roman-into-arabic roman))
+        ((< (first (roman-into-arabic roman))(first (bf (roman-into-arabic roman))))
+          (se (- (first (bf (roman-into-arabic roman)))(first (roman-into-arabic roman))) (arabic-transformation (bf (bf roman)))))
+          (else
+          (se (first (roman-into-arabic roman))(arabic-transformation (bf roman)))))))
+
+;Main procedure arabic that transforms addup a list of arabic numbers into the whole number 
+;Example: (arabic 'MCMLXXi) result 1971
+(define (arabic roman)
+  (addup (arabic-transformation roman)))
