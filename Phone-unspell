@@ -1,0 +1,21 @@
+;Procedure phone-unspell that takes a spelled version of phone number such as popcorn and return the real phone number 7672676
+
+;Helper procedure (unspell-letter 't) result 8
+
+(define (unspell-letter letter)
+  (cond ((member? letter 'abc) 2)
+        ((member? letter 'def) 3)
+        ((member? letter 'ghi) 4)
+        ((member? letter 'jkl) 5)
+        ((member? letter 'mno) 6)
+        ((member? letter 'prs) 7)
+        ((member? letter 'tuv) 8)
+        ((member? letter 'wxy) 9)
+        (else 0)))
+
+;Main procedure
+;Example (phone-unspell2 'russian) result 7877426
+
+(define phone-unspell2
+  (lambda (word-phone-number)
+  (accumulate word  (every unspell-letter word-phone-number))))
