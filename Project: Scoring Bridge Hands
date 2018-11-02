@@ -1,0 +1,73 @@
+
+                                       ;Project: Scoring Bridge Hands
+
+; Procedure card-val that takes a single card as its argument and returns the value of that card
+; Example (card-val 'cq) result 2
+
+(define card-val
+  (lambda (card)
+    (cond
+      ((eq? (bf card) 'a) 4)
+      ((eq? (bf card) 'k) 3)
+      ((eq? (bf card) 'q) 2)
+      ((eq? (bf card) 'j) 1)
+      (else
+       0))))
+
+;Procedure high-card-points that takes a hand as argument and returns the total number of points from high cards in the hand.
+;(the procedure does not count distribution points).
+; Example (high-card-points '(sa s10 hq ck c4) result 9.
+
+(define high-card-points
+  (lambda (hand)
+   (accumulate + (every card-val hand))))
+
+
+;Procedure count-suit that takes a suit and a hand as arguments and returns the number of cards in the hand with the given suit.
+;Example (count-suit 's '(sa s10 hq ck c4)) result 2.
+(define count-suit
+  (lambda (suit hand)
+    (accumulate + (every
+                 (lambda (one-card)
+                   (cond
+                     ((eq? (first one-card) suit) 1)
+                       (else
+                         0)))
+           hand))))
+
+;Procedure suit-counts takes a hand as its argument and returns a sentence containing the number of spades,
+;the number of hears, the number of clubs, and the number of diamonds in the hand.
+;Example (suit-counts '(sa s10 s7 s6 s2 hq hj h9 ck c4 dk d9 d3)) result '(5 3 2 3)
+
+ (define suit-counts
+   (lambda (hand)
+   (se (count-suit 's hand) (count-suit 'h hand)(count-suit 'c hand) (count-suit 'd hand))))
+      
+;Procedure suit-dist-points that takes a number as its argument, interpreting it as the number of cards in a suit.
+;The procedure returns the number of distribution points your hand gets for having that number of cards in a particular suit. (pate 144)
+;Example (suit-dist-point 2) 1
+
+(define suit-dist-points
+  (lambda (number-of-cards-of-particular-suit)
+    (cond
+      ((eq? number-of-cards-of-particular-suit 2) 1)
+      ((eq? number-of-cards-of-particular-suit 1) 2)
+      ((eq? number-of-cards-of-particular-suit 0) 3)
+      (else 0))))
+
+;Procedure hand-dist-points takes a hand as its argument and returns the number of distribution points the hand is worth
+;Example (hand-dist-points '(h3 d7 sk s3 c10 dq d8 s9 s4 d10 c7 d4 s2)), result 3
+
+(define hand-dist-points
+  (lambda (hand)
+   (accumulate + (every suit-dist-points (suit-counts hand)))))
+
+;Procedure bridge-val that takes a hand as its argument and returns the total number of points that the hand is worth.
+;Example (bridge-val '(h3 d7 sk s3 c10 dq d8 s9 s4 d10 c7 d4 s2)) result 8
+;Example (bridge-val '(sa s10 s7 s6 s2 hq hj h9 ck c4 dk d9 d3)) result 14
+
+(define bridge-val
+  (lambda (hand)
+    ( + (hand-dist-points hand)(high-card-points hand))))
+
+                                  ;End of Scoring Bridge Hands project
