@@ -36,4 +36,6 @@ Here are the various kinds of poker hands, in decreasing order of value:
   
 4. Procedure PHONE-UNSPELL 
    that takes a spelled version of phone number such as "popcorn" and return the real phone number 7672676
+   
+5. Procedure GPI that takes a sentence of grades as its argument and returns the corresponding grade point average
 
