@@ -31,5 +31,9 @@ Here are the various kinds of poker hands, in decreasing order of value:
 
 3. PROJECT: SPELLING NAMES OF HUGE NUMBERS
   Project description:
-  Write a procedure number-name that takes a positive integer argument and returns a sentence containing that number spelled out in words:
+  Write a procedure number-name that takes a positive integer argument and returns a sentence containing that number spelled out in    words:
   Example (number-name 5513345) result '(five million five hundred thirteen thousand three hundred fourty five)
+  
+4. Procedure PHONE-UNSPELL 
+   that takes a spelled version of phone number such as "popcorn" and return the real phone number 7672676
+
