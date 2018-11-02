@@ -2,7 +2,7 @@ All PROJECTS ARE WRITTEN IN SCHEME PROGRAMMING LANGUAGE THAT IS A DIALECT OF LIS
 
 DESCRIPTION OF PROJECTS:
 
-1. CONVERT ROMAN NUMERALS INTO ARABIC NUMERALS
+1. PROCEDURE: CONVERT ROMAN NUMERALS INTO ARABIC NUMERALS
    Example: Converstion of mcmlxxi into 1971
 
 2. PROJECT: SCORING POKER HANDS
@@ -34,9 +34,10 @@ Here are the various kinds of poker hands, in decreasing order of value:
   Write a procedure number-name that takes a positive integer argument and returns a sentence containing that number spelled out in    words:
   Example (number-name 5513345) result '(five million five hundred thirteen thousand three hundred fourty five)
   
-4. Procedure PHONE-UNSPELL 
+4. PROCEDURE: PHONE-UNSPELL 
    that takes a spelled version of phone number such as "popcorn" and return the real phone number 7672676
    
-5. Procedure GPI that takes a sentence of grades as its argument and returns the corresponding grade point average
+5. PROCEDURE: GPI
+   that takes a sentence of grades as its argument and returns the corresponding grade point average
    Example (gpi '(A A- B+ C D)) result 2.8
 
