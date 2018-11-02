@@ -41,3 +41,8 @@ Here are the various kinds of poker hands, in decreasing order of value:
    that takes a sentence of grades as its argument and returns the corresponding grade point average
    Example (gpi '(A A- B+ C D)) result 2.8
 
+6. PROJECT: SCORING BRIDGE HANDS
+   takes a single card as its argument and returns the value of that card
+   Example (bridge-val '(sa s10 s7 s6 s2 hq hj h9 ck c4 dk d9 d3)) result 14
+
+
