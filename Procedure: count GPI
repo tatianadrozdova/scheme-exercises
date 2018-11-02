@@ -1,0 +1,78 @@
+;Procedure "gpi" 
+;that takes a sentence of grades as its argument and returns the corresponding grade point average (SCHEME PROGRAMMING LANGUAGE)
+
+;1ST VERSION USING HIGHER ORDER FUNCTIONS
+;Example (gpi '(A A- B+ C D)) result 2.8
+
+;Helper procedure base-grade that takes a grade as argument and returns 0 1 2 3 4
+;Example (base-grade 'B) result 3
+
+(define (base-grade grade) 
+  (cond
+      ((eq? grade 'A) 4)
+      ((eq? grade 'B) 3)
+      ((eq? grade 'C) 2)
+      ((eq? grade 'D) 1)
+      ((eq? grade 'F) 0)
+      ((eq? grade 'A+) (sum (grade-modifier grade) 4))
+      ((eq? grade 'A-) (sum (grade-modifier grade) 4))
+      ((eq? grade 'B+) (sum (grade-modifier grade) 3))
+      ((eq? grade 'B-) (sum (grade-modifier grade) 3))
+      ((eq? grade 'C+) (sum (grade-modifier grade) 2))
+      ((eq? grade 'C-) (sum (grade-modifier grade) 2))
+      ((eq? grade 'D+) (sum (grade-modifier grade) 1))
+      ((eq? grade 'D-) (sum (grade-modifier grade) 1))
+      ((eq? grade 'F+) (sum (grade-modifier grade) 0))
+      ((eq? grade 'F-) (sum (grade-modifier grade) 0))
+      (else 0)))
+      
+   
+ (define (sum x y)
+   (+ x y))
+
+;Helper procedure grade-modifier that returns -.33 0 .33,depending on whether the grade has a minus,a plus,or neither
+;Example (grade-modifier 'B-) result -0.33
+;Example (grade-modifier 'A+) result 0.33
+
+(define grade-modifier 
+  (lambda (grade)
+    (cond
+      ((member? '+ grade) 0.33)
+      ((member? '- grade) -0.33)
+    (else 0))))
+
+;Main procedure
+;Example (gpi '(A A- B+ C D)) result 2.8
+
+(define gpi 
+  (lambda (grade-sentence)
+(/ (accumulate + (every base-grade grade-sentence)) (count grade-sentence))))
+;End of First version
+
+
+;2ND VERSION USING RECURSION
+
+;Helper procedure that transfers grades into numbers
+;Example (grades '(A B C- B A)) result '(4 3 1.67 3 4)
+ (define grades 
+  (lambda (grade-sentence)
+    (cond
+      ((null? grade-sentence) (quote ()))
+       (else
+         (cons (base-grade (car grade-sentence)) (grades (cdr grade-sentence)))))))
+
+;Helper procedure that counts a sum of all grades in the sentence
+;Example (grades-sum '(A B C- B A)) result 15.67
+
+(define grades-sum
+  (lambda (grade-sentence)
+    (addup (grades grade-sentence)))) 
+
+;Main procedure that counts gpi of all grades in the sentence
+;Example (gpi-recursion '(A B C- B A)) result 3.134
+
+(define gpi-recursion
+  (lambda (grade-sentence)
+  (/ (grades-sum grade-sentence) (count grade-sentence))))
+;End of Second version          
+  
